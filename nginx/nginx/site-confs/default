@@ -1,0 +1,30 @@
+server {
+	listen 80;
+
+	listen 443 ssl;
+
+	root /config/www;
+	index index.html index.htm index.php;
+
+	server_name _;
+
+	ssl_certificate /config/keys/cert.crt;
+	ssl_certificate_key /config/keys/cert.key;
+
+
+	client_max_body_size 0;
+
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+
+	location /hello1 {
+		set $hello_endpoint1 http://10.52.8.29:8112;
+		proxy_pass $hello_endpoint1;
+	}
+
+	location /hello2 {
+		set $hello_endpoint2 http://10.52.8.29:9002;
+		proxy_pass $hello_endpoint2;
+	}
+}
